@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+{% block title %}Delete Class{% endblock title %}
+{% block content %}
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    <h2 class="mb-12 text-2xl text-center">Delete Class</h2>
+    <p>Are you sure you want to delete this class: {{ class_obj.class_name }}? This action cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Proceed</button>
+        <a href="{% url 'view_course' username=request.user.username coursename=class_obj.course.name %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Cancel</a>
+    </form>
+</div>
+{% endblock %}

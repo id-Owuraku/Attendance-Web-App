@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %} 
+{% block title %} Sign up {% endblock title %}
+{% block content %}
+<div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+  <h1 class="mb-6 text-3xl"> Sign up</h1>
+
+  <form id="signup-form" method="post" action="{% url 'signup' %}" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    
+    <div class="mb-3">
+       <label class="inline-block mb-2" for="username">Username</label><br>
+       <input type="text" name="username" class=" border-gray-300 rounded-lg px-4 py-2 w-full">
+    </div>
+    <div class="mb-3">
+      <label class="inline-block mb-2" for="first_name">First Name</label><br>
+      <input type="text" name="first_name" class=" border-gray-300 rounded-lg px-4 py-2 w-full">
+    </div>
+    <div class="mb-3">
+      <label class="inline-block mb-2" for="last_name">Last Name</label><br>
+      <input type="text" name="last_name" class="border-gray-300 rounded-lg px-4 py-2 w-full">
+    </div>
+    <div class="mb-3">
+      <label class="inline-block mb-2" for="email">Email</label><br>
+      <input type="email" name="email" class="border-gray-300 rounded-lg px-4 py-2 w-full">
+    </div>
+    <div class="mb-3">
+      <label class="inline-block mb-2" for="password">Password</label><br>
+      <input type="password" name="password" class="border-gray-300 rounded-lg px-4 py-2 w-full">
+    </div>
+    <div class="mb-3">
+      <label class="inline-block mb-2" for="password2">Repeat password</label><br>
+      <input type="password" name="password2" class="border-gray-300 rounded-lg px-4 py-2 w-full">
+    </div>
+
+    <button id="submit-btn" class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white" >Submit</button>
+  
+  </form>
+  <style>
+    h5{
+        color:red
+    }
+</style>
+{% for message in messages %}
+   <h5>{{message}}</h5>
+{% endfor %}
+</div>
+
+{% endblock content %}

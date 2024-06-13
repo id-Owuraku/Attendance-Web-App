@@ -1,0 +1,271 @@
+<html>
+  <head>
+    <title>Circles</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <!-- <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script> -->
+    <style>
+      /* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+#map {
+  height: 100%;
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;{% extends 'core/base.html' %}
+{% block title %}Add Event{% endblock title %}
+{% block content %}
+<div class="container">
+  <div class="text-black text-center font-bold py-2 px-4 rounded"><h1>Add Event</h1></div>
+  <form id="add-event-form" method="post">
+    {% csrf_token %}
+    {% if messages %}
+      <div class="text-red-500" id="error-messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      <script>
+        setTimeout(function() {
+          document.getElementById('error-messages').style.opacity = '0';
+          setTimeout(function() {
+            document.getElementById('error-messages').style.display = 'none';
+          }, 3000);
+        }, 3000);
+      </script>
+    {% endif %}
+    {% for field in form %}
+      <div class="mb-6">
+        <label class="block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="text-red-500">
+          {% for error in field.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!-- Google Maps Autocomplete -->
+    <div class="mb-6">
+      <label class="block mb-2" for="id_location_address">Location Address</label>
+      <input id="id_location_address" type="text" name="location_address" class="form-control">
+      <input id="id_geolocation" type="hidden" name="geolocation">
+    </div>
+
+    
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Event</button>
+  </form>
+      <div style="height: 100%;" id="map">
+
+    </div>
+</div>
+
+
+<!-- JavaScript for Google Maps Autocomplete
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCs3XZViRa5zJ8f_Qg755brBmBbqa3YVeQ&libraries=places"></script>
+<script>
+  function initializeAutocomplete() {
+    var input = document.getElementById('id_location_address');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    var map;
+    var marker;
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+      var place = autocomplete.getPlace();
+      document.getElementById('id_geolocation').value = JSON.stringify({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      });
+
+      // Initialize map if not already initialized
+      if (!map) {
+        var mapOptions = {
+          center: { lat: 49.25, lng: -123.1 },
+          zoom: 15
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        marker = new google.maps.Marker({
+          position: place.geometry.location,
+          map: map,
+          draggable: true
+        });
+
+        // Update location input when marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function(event) {
+          document.getElementById('id_geolocation').value = JSON.stringify({
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng()
+          });
+        });
+      } else {
+        // Update map and marker position
+        map.setCenter(place.geometry.location);
+        marker.setPosition(place.geometry.location);
+      }
+    });
+  }
+  google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
+</script>
+   <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCs3XZViRa5zJ8f_Qg755brBmBbqa3YVeQ&callback=initMap&v=weekly"
+      defer
+    ></script> -->
+
+
+
+<s
+                return geolocation.split(',');
+            }
+        },
+
+        codeAddress: function() {
+            var place = autocomplete.getPlace();
+
+            if(place.geometry !== undefined) {
+                self.updateWithCoordinates(place.geometry.location);
+            }
+            else {
+                geocoder.geocode({'address': place.name}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var latlng = results[0].geometry.location;
+                        self.updateWithCoordinates(latlng);
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
+        },
+
+        updateWithCoordinates: function(latlng) {
+            map.setCenter(latlng);
+            map.setZoom(18);
+            self.setMarker(latlng);
+            self.updateGeolocation(latlng);
+        },
+
+        setMarker: function(latlng) {
+            if (marker) {
+                self.updateMarker(latlng);
+            } else {
+                self.addMarker({'latlng': latlng, 'draggable': true});
+            }
+        },
+
+        addMarker: function(Options) {
+            marker = new google.maps.Marker({
+                map: map,
+                position: Options.latlng
+            });
+
+            var draggable = Options.draggable || false;
+            if (draggable) {
+                self.addMarkerDrag(marker);
+            }
+        },
+
+        addMarkerDrag: function() {
+            marker.setDraggable(true);
+            google.maps.event.addListener(marker, 'dragend', function(new_location) {
+                self.updateGeolocation(new_location.latLng);
+            });
+        },
+
+        updateMarker: function(latlng) {
+            marker.setPosition(latlng);
+        },
+
+        updateGeolocation: function(latlng) {
+            document.getElementById(geolocationId).value = latlng.lat() + "," + latlng.lng();
+            $("#" + geolocationId).trigger('change');
+        }
+    };
+
+    return self;
+}
+
+$(document).ready(function() {
+    var googlemap = googleMapAdmin();
+    googlemap.initialize();
+});
+</script>
+{% endblock %}
+
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <!-- 
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises.
+      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+      <script>
+        const citymap = {
+  chicago: {
+    center: { lat: 41.878, lng: -87.629 },
+    population: 2714856,
+  },
+  newyork: {
+    center: { lat: 40.714, lng: -74.005 },
+    population: 8405837,
+  },
+  losangeles: {
+    center: { lat: 34.052, lng: -118.243 },
+    population: 3857799,
+  },
+  vancouver: {
+    center: { lat: 49.25, lng: -123.1 },
+    population: 603502,
+  },
+};
+
+function initMap() {
+  // Create the map.
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 4,
+    center: { lat: 37.09, lng: -95.712 },
+    mapTypeId: "terrain",
+  });
+
+  // Construct the circle for each value in citymap.
+  // Note: We scale the area of the circle based on the population.
+  for (const city in citymap) {
+    // Add the circle for this city to the map.
+    const cityCircle = new google.maps.Circle({
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35,
+      map,
+      center: citymap[city].center,
+      radius: Math.sqrt(citymap[city].population) * 100,
+    });
+  }
+}
+
+window.initMap = initMap;
+      </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCs3XZViRa5zJ8f_Qg755brBmBbqa3YVeQ&callback=initMap&v=weekly"
+      defer
+    ></script>
+  </body>
+</html>

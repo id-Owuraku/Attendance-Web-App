@@ -1,0 +1,20 @@
+<!-- templates/core/edit_profile.html -->
+
+{% extends 'core/base.html' %}
+{% block title %}Edit Profile{% endblock title %}
+{% block content %}
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    <h2 class="mb-12 text-2xl text-center">Edit Profile</h2>
+    <div style="display: flex; flex-direction: row;">
+        <p>Username: {{ user.username }}</p>
+        <button><a href="{% url 'change_username' request.user.username %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mt-2">Change Username</a></button>
+    </div>
+    <div style="display: flex; flex-direction: row; margin-top: 1rem;">
+        <p>Email: {{ user.email }}</p>
+        <button><a href="{% url 'change_email' request.user.username %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mt-2">Change Email</a></button>
+    </div>
+    <div style="display: flex; flex-direction: row; margin-top: 1rem;">
+        <button><a href="{% url 'change_password' request.user.username %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Change Password</a></button>
+    </div>
+</div>
+{% endblock %}

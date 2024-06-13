@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% block title %}Add Class to {{ course.name }}{% endblock title %}
+{% block content %}
+<div class=" text-black text-center font-bold py-2 px-4 rounded" ><h1 >Add Class to {{ course.name }}</h1></div>
+  <form method="post">
+    {% csrf_token %}
+    {% if messages %}
+      <div class="text-red-500" id="error-messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      <script>
+        setTimeout(function() {
+          document.getElementById('error-messages').style.opacity = '0';
+          setTimeout(function() {
+            document.getElementById('error-messages').style.display = 'none';
+          }, 3000);
+        }, 3000);
+      </script>
+    {% endif %}
+    {% for field in form %}
+      <div class="mb-6">
+        <label class="block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="text-red-500">
+          {% for error in field.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Class</button>
+  </form>
+{% endblock %}

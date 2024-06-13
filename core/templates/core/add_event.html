@@ -1,0 +1,164 @@
+{% extends 'core/base.html' %}
+{% block title %}Add Event{% endblock title %}
+{% block content %}
+  <div class="text-black text-center font-bold text-[32px] py-4 px-4 rounded"><h1>Add Event</h1></div>
+  <div class="flex-1 flex flex-row" >
+    <div class="w-1/4">
+  <form id="add-event-form" method="post">
+    {% csrf_token %}
+    {% if messages %}
+      <div class="text-red-500" id="error-messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      <script>
+        setTimeout(function() {
+          document.getElementById('error-messages').style.opacity = '0';
+          setTimeout(function() {
+            document.getElementById('error-messages').style.display = 'none';
+          }, 3000);
+        }, 3000);
+      </script>
+    {% endif %}
+    {% for field in form %}
+      <div class="mb-6">
+        <label class="block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="text-red-500">
+          {% for error in field.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <input id="geolocation" type="hidden">
+    <!-- Google Maps Autocomplete -->
+    <div class="mb-6">
+      <!-- <label class="block mb-2" for="id_location_address">Location Address</label> -->
+      <!-- <input id="id_location_address" type="text" name="location_address" class="form-control"> -->
+      <!-- <input id="id_geolocation" type="hidden" name="geolocation"> -->
+      <input name="checkpoint_lat" id="lat" type="hidden">
+      <input name="checkpoint_lng" id="lng" type="hidden">
+    </div>
+
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Event</button>
+  </form>
+    </div>
+  <div class="w-3/4" style="height: 700px; background-color: black;" id="map">
+
+  </div>
+  </div>
+  <script>
+  let initialRadius = 0
+  let radius = document.getElementById("radius");
+  let mainPoint = { lat: 6.673142860592767, lng:-1.5669536679534946 }
+  async function initMap() {
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    // Create the map.
+    
+    const map = new Map(document.getElementById("map"), {
+      zoom: 20,
+      center: mainPoint,
+      mapTypeId: "satellite",
+      mapId: "4504f8b37365c3d0",
+      gestureHandling: "cooperative",
+
+    });
+    
+    let cityCircle = new google.maps.Circle({
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "rgb(19, 108, 143)",
+      fillOpacity: 0.85,
+      map,
+      center: mainPoint,
+      radius: parseFloat(initialRadius),
+    });
+
+  // })
+
+  // map marker
+ const marker = new AdvancedMarkerElement({
+  map: map,
+  position: mainPoint,
+  title: "Checkout",
+  gmpDraggable: true,
+  })
+
+  marker;
+  
+  radius.addEventListener('input', () => {
+    console.log(radius.value);
+    initialRadius = parseFloat(radius.value)
+    initMap()
+    })
+
+  marker.addListener('dragend', function (event) {
+  let lat =  event.latLng.lat();
+  let lng =  event.latLng.lng(); 
+  mainPoint["lat"] = lat;
+  mainPoint["lng"] = lng;
+    changeMainpoint(lat, lng);
+  initMap();
+    })
+  }
+
+  function changeMainpoint(lat, lng){
+  document.getElementById("lat").value = lat;
+  document.getElementById("lng").value = lng;
+    }
+  initMap();
+  </script>
+
+<!-- JavaScript for Google Maps Autocomplete -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+<script>
+  function initializeAutocomplete() {
+    var input = document.getElementById('id_location_address');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    var map;
+    var marker;
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+      var place = autocomplete.getPlace();
+      document.getElementById('id_geolocation').value = JSON.stringify({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      });
+
+      // Initialize map if not already initialized
+      if (!map) {
+        var mapOptions = {
+          center: place.geometry.location,
+          zoom: 15
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        marker = new google.maps.Marker({
+          position: place.geometry.location,
+          map: map,
+          draggable: true
+        });
+
+        // Update location input when marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function(event) {
+          document.getElementById('id_geolocation').value = JSON.stringify({
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng()
+          });
+        });
+      } else {
+        // Update map and marker position
+        map.setCenter(place.geometry.location);
+        marker.setPosition(place.geometry.location);
+      }
+    });
+  }
+  google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
+</script> -->
+
+{% endblock %}
