@@ -1,41 +1,51 @@
 {% extends 'core/base.html' %}
 {% block title %}{{ event.event_name }}{% endblock title %}
 {% block content %}
-<div class="text-black font-bold py-2 px-4 rounded">
+<div class="flex justify-between items-center text-black font-bold py-2 px-4 rounded">
     <h1>{{ event.event_name }}</h1>
+    {% comment %}<a href="" class="text-blue-500 hover:text-blue-700">
+        <i class='bx bx-download'></i>
+    </a>{% endcomment %}
 </div>
 
 <!-- Display event details -->
 <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
     <h2 class="mb-12 text-2xl text-center"><u>Event Details</u></h2>
     <div class="bg-white p-8 rounded-xl">
+        {% if event.event_name %}
         <p><strong>Event Name:</strong> {{ event.event_name }}</p>
+        {% endif %}
         <p><strong>Start Time:</strong> {{ event.start_time }}</p>
         <p><strong>End Time:</strong> {{ event.end_time }}</p>
         <p><strong>Location:</strong> {{ event.location_address }}</p>
         <p><strong>Radius:</strong> {{ event.radius }} meters</p>
-        <p><strong>Geolocation:</strong> {{ event.geolocation }}</p>
     </div>
 </div>
 
 <!-- Display attendee information -->
-{% comment %} <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
     <h2 class="mb-12 text-2xl text-center"><u>Attendee Information</u></h2>
     <div class="bg-white p-8 rounded-xl">
-        {% if attendees %}
-            <div class="grid grid-cols-1 gap-6">
-                {% for attendee in attendees %}
-                    <div class="bg-gray-200 p-4 rounded-md">
-                        <p><strong>Student ID:</strong> {{ attendee.student_id }}</p>
-                        <p><strong>Index Number:</strong> {{ attendee.index_number }}</p>
-                        <p><strong>Student Name:</strong> {{ attendee.student_name }}</p>
-                        <p><strong>Check-in Time:</strong> {{ attendee.check_in_time }}</p>
-                    </div>
-                {% endfor %}
+        {% if check_ins %}
+            <!-- Header Row -->
+            <div class="grid grid-cols-4 font-bold border-b border-gray-200 pb-2">
+                {% if is_student_name_required %}<div>Student Name</div>{% endif %}
+                {% if is_student_id_required %}<div>Student ID</div>{% endif %}
+                {% if is_index_number_required %}<div>Index Number</div>{% endif %}
+                <div>Check-In Time</div>
             </div>
+            <!-- Record Rows -->
+            {% for check_in in check_ins %}
+            <div class="grid grid-cols-4 py-2 border-b border-gray-200">
+                {% if is_student_name_required %}<div>{{ check_in.student_name }}</div>{% endif %}
+                {% if is_student_id_required %}<div>{{ check_in.student_id }}</div>{% endif %}
+                {% if is_index_number_required %}<div>{{ check_in.index_number }}</div>{% endif %}
+                <div>{{ check_in.check_in_time }}</div>
+            </div>
+            {% endfor %}
         {% else %}
             <p>No attendees have checked in for this event yet.</p>
         {% endif %}
     </div>
-</div> {% endcomment %}
+</div> 
 {% endblock %}

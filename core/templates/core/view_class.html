@@ -16,12 +16,15 @@
                 <div>
                     <!-- Display event details -->
                     <div class="text-black bg-white p-8 rounded-xl h-full relative">
+                        
                         <div class="flex justify-between items-center">
+                            <a href="{% url 'view_event' username=user.username coursename=coursename classname=class.class_name event_id=event.event_id %}" class="block text-black bg-white p-8 rounded-xl h-full relative">
                             <div>
                                 <h2>{{ event.event_name }}</h2>
                                 <p>Start Time: {{ event.start_time }}</p>
                                 <p>End Time: {{ event.end_time }}</p>
                             </div>
+                            </a>
                             <div class="absolute top-2 right-2 flex space-x-2">
                                 <!-- Bin Icon for deleting event -->
                                 <a href="{% url 'delete_event' username=user.username coursename=coursename classname=class.class_name event_id=event.event_id %}" class="text-red-500">
@@ -33,6 +36,7 @@
                                 </button>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
                 <!-- Share Pop-up -->

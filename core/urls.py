@@ -17,5 +17,7 @@ urlpatterns = [
     path('<str:username>/<str:coursename>/<str:classname>/add-event/', views.add_event, name='add_event'),
     path('<str:username>/<str:coursename>/<str:classname>/<int:event_id>/delete-event/', views.delete_event, name='delete_event'),
     path('<str:username>/<str:coursename>/<str:classname>/<int:event_id>/checkin/', views.check_in, name='check_in'),
-        
+    path('check_in_not_allowed/', views.check_in_not_allowed, name='check_in_not_allowed'),
+    path('<str:username>/<str:coursename>/<str:classname>/<int:event_id>/view-event/', views.view_event, name='view_event'),
+   
 ]

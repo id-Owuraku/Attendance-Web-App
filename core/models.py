@@ -31,13 +31,11 @@ class Class(models.Model):
 
 class Event(models.Model):
     event_id = models.AutoField(primary_key=True)
-    event_url=models.URLField(null=True)
     related_class = models.ForeignKey(Class, on_delete=models.CASCADE)
     event_name = models.CharField(max_length=100, blank=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     location_address = models.CharField(max_length=200,null=True, blank=True)
-    geolocation = GeoLocationField(max_length=100,null=True, blank=True)
     radius = models.DecimalField(max_digits=5, decimal_places=2)
     is_student_id_required = models.BooleanField(default=False)
     is_index_number_required = models.BooleanField(default=False)

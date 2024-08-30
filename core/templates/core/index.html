@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+{% block title %}Attendance App{% endblock title %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold">Welcome to <small style="font-family:Calibri">W<b>H</b>ere</small>Are<i>YOU</i></h1>
+        <p class="mt-4 text-lg text-gray-600">Empowering seamless attendance management with location-based check-ins.</p>
+    </div>
+
+    <!-- Feature Tiles -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <img src="" alt="Event Management" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-xl font-bold mb-2">Event Management</h2>
+            <p>Effortlessly create and manage events with detailed location constraints.</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <img src="" alt="Attendance Reports" class="w-full h-auto rounded-lg mb-4">
+            <h2 class="text-xl font-bold mb-2">Comprehensive Reporting</h2>
+            <p>Gain insights with comprehensive attendance reports and analytics.</p>
+        </div>
+    </div>
+
+    <!-- Call to Action Buttons -->
+    <div class="flex justify-center">
+        <a href="{% url 'signup' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded mr-4">Sign Up Now!</a>
+        <div style="flex-direction: row;">
+        <div>Already have an account?</div> 
+        <div><a href="{% url 'login' %}" class="text-gray-800 font-bold ">Log In</a></div>
+       </div>
+    </div>
+</div>
+{% endblock %}

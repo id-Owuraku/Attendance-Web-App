@@ -1,12 +1,8 @@
-<!-- templates/core/check_in.html -->
 {% extends 'core/base.html' %}
 {% block title %}Check-In{% endblock title %}
 {% block content %}
 <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
     <h2 class="mb-12 text-2xl text-center">Check-In</h2>
-    {% if not is_within_radius %}
-    <p>You are not within the radius to check-in to this event.</p>
-    {% else %}
     <form id="check-in-form" method="post">
         {% csrf_token %}
         {% if is_student_id_required %}
@@ -31,7 +27,6 @@
         <input type="hidden" id="longitude" name="longitude">
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check-In</button>
     </form>
-    {% endif %}
 </div>
 <script>
 window.onload = function() {

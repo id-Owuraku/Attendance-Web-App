@@ -125,35 +125,30 @@ class CourseForm(forms.ModelForm):
     
     
 class EventForm(forms.ModelForm):
+    # Define custom validation method
+    def clean(self):
+        cleaned_data = super().clean()
+        is_student_id_required = cleaned_data.get('is_student_id_required')
+        is_index_number_required = cleaned_data.get('is_index_number_required')
+        is_student_name_required = cleaned_data.get('is_student_name_required')
+
+        # Check if at least one checkbox is selected
+        if not any([is_student_id_required, is_index_number_required, is_student_name_required]):
+            raise forms.ValidationError("Please select at least one checkbox.")
+
+        return cleaned_data
+
     class Meta:
         model = Event
-        fields = ['event_name',
-                  'start_time', 'end_time', 
-                  'location_address', 'geolocation',
-                  'radius' ,'is_student_id_required',
-                  'is_index_number_required',
-                  'is_student_name_required']
+        fields = ['event_name', 'start_time', 'end_time', 'location_address', 'radius', 'is_student_id_required', 'is_index_number_required', 'is_student_name_required']
         widgets = {
-            'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            # "radius": forms.CharField()
+            'event_name': forms.TextInput(attrs={'class': 'form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'}),
+            'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'}),
+            'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'}),
+            'location_address': forms.TextInput(attrs={'class': 'form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none', 'id': 'id_location_address'}),
+            'radius': forms.NumberInput(attrs={'class': 'form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none', 'id': 'radius'}),
         }
-    event_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': 'Event name (optional)',
-        'class': 'form-control'
-    }))
 
-    location_address = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'placeholder': 'Event location',
-        'class': 'form-control',
-        'id': 'id_location_address'# This ID is used by JavaScript for autocomplete
-    }))
-
-    radius = forms.DecimalField(required=True, widget=forms.TextInput(attrs={
-        'id':'radius',
-        'type':'number'
-        }))
-    
 class ClassForm(forms.ModelForm):
     class_name = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder': 'Class Name',
@@ -171,15 +166,15 @@ class ClassForm(forms.ModelForm):
 
 
 class CheckInForm(forms.Form):
-    student_id = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    student_id = forms.CharField(required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Student ID',
         'class': 'w-full py-4 px-6 rounded-xl'
     }))
-    index_number = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    index_number = forms.CharField(required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Index Number',
         'class': 'w-full py-4 px-6 rounded-xl'
     }))
-    student_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    student_name = forms.CharField(required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Student Name',
         'class': 'w-full py-4 px-6 rounded-xl'
     }))
